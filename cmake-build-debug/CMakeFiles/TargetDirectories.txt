@@ -1,0 +1,3 @@
+/home/hamza/Workspaces/C++/databases/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/hamza/Workspaces/C++/databases/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/hamza/Workspaces/C++/databases/cmake-build-debug/CMakeFiles/databases.dir
