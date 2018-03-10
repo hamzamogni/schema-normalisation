@@ -58,9 +58,7 @@ string Table::concatenateRight() const
     for (int i = 0; i < arr.size(); ++i)
         ret.append(arr[i].getRight());
 
-    ret = format(ret);
-
-    return ret;
+    return format(ret);
 }
 
 string Table::notInRight() const
@@ -88,18 +86,14 @@ string Table::closure(string const &src) const
             string left = arr[i].getLeft();
 
             for (int j = 0; j < left.length(); ++j)
-            {
                 if( clos.find(left[j]) == string::npos)
                     break;
                 else if (j == left.length()-1 && clos.find(left[j]) != string::npos)
                     clos.append(arr[i].getRight());
-            }
-
         }
     } while (count++ < _nbrFunctDepen);
 
-    clos = format(clos);
-    return clos;
+    return format(clos);
 }
 
 set<string> Table::keyGen() const
@@ -119,10 +113,7 @@ set<string> Table::keyGen() const
         {
             tmp = initKey + arr[i].getLeft();
             if (closure(tmp) == _attributes)
-            {
-                tmp = format(tmp);
-                foundKeys.insert(tmp);
-            }
+                foundKeys.insert(format(tmp));
         }
 
         return foundKeys;
