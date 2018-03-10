@@ -1,1 +1,0 @@
-/usr/bin/c++  -g   CMakeFiles/databases.dir/main.cpp.o CMakeFiles/databases.dir/Table.cpp.o CMakeFiles/databases.dir/FuncDepen.cpp.o  -o databases 
