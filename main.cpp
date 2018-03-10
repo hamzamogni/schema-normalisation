@@ -7,16 +7,16 @@ using namespace std;
 int main() {
     Table a;
     string b("A");
+    //a.keyGen();
 
-    cout << a;
 
 
-//    set<string> foundKeys;
-//
-//    set<string>:: iterator it;
-//    for( it = foundKeys.begin(); it!=foundKeys.end(); ++it){
-//        cout << *it << endl;
-//    }
+    set<string> foundKeys = a.keyGen();
+
+    set<string>:: iterator it;
+    for( it = foundKeys.begin(); it!=foundKeys.end(); ++it){
+        cout << *it << endl;
+    }
 
     return 0;
 }

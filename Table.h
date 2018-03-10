@@ -22,8 +22,9 @@ private:
     std::string _attributes;
     int         _nbrAttributes;
     int         _nbrFunctDepen;
-
     std::vector<FuncDepen> _fds;
+
+    std::string format(std::string&) const;
 };
 
 

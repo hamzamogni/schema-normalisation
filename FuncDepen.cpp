@@ -2,15 +2,18 @@
 
 using namespace std;
 
-FuncDepen::FuncDepen(string& left, string& right) {
+FuncDepen::FuncDepen(string& left, string& right)
+{
     _left  = left;
     _right = right;
 }
 
-string FuncDepen::getLeft() {
+string FuncDepen::getLeft()
+{
     return _left;
 }
 
-string FuncDepen::getRight() {
+string FuncDepen::getRight()
+{
     return _right;
 }

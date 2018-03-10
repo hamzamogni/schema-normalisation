@@ -2,7 +2,8 @@
 
 using namespace std;
 
-Table::Table() {
+Table::Table()
+{
     cout << "\nHow many attributes do you have ? ";
     cin >> _nbrAttributes;
 
@@ -12,11 +13,12 @@ Table::Table() {
     cout << *this;
 
     cout << "\nHow many functional Dependencies ? ";
-    cin  >> _nbrFunctDepen;
+    cin >> _nbrFunctDepen;
 
     string left, right;
-    for (int i = 0; i < _nbrFunctDepen; ++i) {
-        cout << "The FD N° " << i+1;
+    for (int i = 0; i < _nbrFunctDepen; ++i)
+    {
+        cout << "The FD N° " << i + 1;
         cout << "\n\t-Left part : ";
         cin >> left;
         for (int j = 0; j < left.length(); ++j)
@@ -33,24 +35,103 @@ Table::Table() {
 
 }
 
-string Table::getAttr() const {
+string Table::getAttr() const
+{
     return _attributes;
 }
 
-vector<FuncDepen> Table::getFD() const {
+vector<FuncDepen> Table::getFD() const
+{
     return _fds;
 }
 
-int Table::getNbrFD() const {
+int Table::getNbrFD() const
+{
     return _nbrFunctDepen;
 }
 
-string Table::concatenateRight() const {
+string Table::concatenateRight() const
+{
     vector<FuncDepen> arr = getFD();
     string ret;
 
-    for(int i = 0; i < arr.size(); ++i)
+    for (int i = 0; i < arr.size(); ++i)
         ret.append(arr[i].getRight());
+
+    ret = format(ret);
+
+    return ret;
+}
+
+string Table::notInRight() const
+{
+    string temp = concatenateRight();
+    string ret;
+
+    for (int i = 0; i < _attributes.length(); ++i)
+        if (temp.find_first_of(_attributes[i]) == string::npos)
+            ret.push_back(_attributes[i]);
+
+    return ret;
+}
+
+string Table::closure(string const &src) const
+{
+    string clos = src;
+    vector<FuncDepen> arr = getFD();
+    int count = 1;
+
+    do
+    {
+        for (int i = 0; i < _nbrFunctDepen; ++i)
+        {
+            string left = arr[i].getLeft();
+
+            for (int j = 0; j < left.length(); ++j)
+            {
+                if( clos.find(left[j]) == string::npos)
+                    break;
+                else if (j == left.length()-1 && clos.find(left[j]) != string::npos)
+                    clos.append(arr[i].getRight());
+            }
+
+        }
+    } while (count++ < _nbrFunctDepen);
+
+    clos = format(clos);
+    return clos;
+}
+
+set<string> Table::keyGen() const
+{
+    set<string> foundKeys;
+    vector<FuncDepen> arr = getFD();
+    string initKey = notInRight(), tmp;
+
+    if (closure(initKey) == _attributes)
+    {
+        tmp = format(tmp);
+        foundKeys.insert(initKey);
+        return foundKeys;
+    } else
+    {
+        for (int i = 0; i < _nbrFunctDepen; ++i)
+        {
+            tmp = initKey + arr[i].getLeft();
+            if (closure(tmp) == _attributes)
+            {
+                tmp = format(tmp);
+                foundKeys.insert(tmp);
+            }
+        }
+
+        return foundKeys;
+    }
+}
+
+std::string Table::format(std::string& src) const
+{
+    string ret = src;
 
     sort(ret.begin(), ret.end());
 
@@ -60,51 +141,15 @@ string Table::concatenateRight() const {
     return ret;
 }
 
-string Table::notInRight() const {
-    string temp = concatenateRight();
-    string ret;
-
-    for(int i = 0; i < _attributes.length(); ++i)
-        if( temp.find_first_of(_attributes[i]) == string::npos)
-            ret.push_back(_attributes[i]);
-
-    return ret;
-}
-
-string Table::closure(string const& src) const {
-    string clos = src;
-    vector<FuncDepen> arr = getFD();
-    int count = 1;
-
-    do{
-        for (int i = 0; i < _nbrFunctDepen; ++i)
-            if( clos.find(arr[i].getLeft()) != string::npos)
-                clos.append(arr[i].getRight());
-    }while (count++ < _nbrFunctDepen);
-
-    sort(clos.begin(), clos.end());
-
-    string::iterator it = unique(clos.begin(), clos.end());
-    clos.erase(it, clos.end());
-    return clos;
-}
-
-set<string> Table::keyGen() const{
-    set<string> foundKeys;
-    set<string> possibleKeys;
-    string initKey   = notInRight();
-
-
-
-    return foundKeys;
-}
-
-ostream& operator<<( ostream& flux, Table const& table ) {
+ostream &operator<<(ostream &flux, Table const &table)
+{
     vector<FuncDepen> arr = table.getFD();
 
     cout << "\tR(";
-    for (int j = 0; j < table.getAttr().length(); ++j) {
-        if (j == table.getAttr().length() - 1 ){
+    for (int j = 0; j < table.getAttr().length(); ++j)
+    {
+        if (j == table.getAttr().length() - 1)
+        {
             cout << table.getAttr()[j] << ")";
             break;
         }
@@ -113,9 +158,7 @@ ostream& operator<<( ostream& flux, Table const& table ) {
 
     cout << endl;
     for (int i = 0; i < table.getNbrFD(); ++i)
-        cout << "\t\tFD N° " << i+1 << " : " << arr[i].getLeft() << " --> " << arr[i].getRight() << endl;
+        cout << "\t\tFD N° " << i + 1 << " : " << arr[i].getLeft() << " --> " << arr[i].getRight() << endl;
 
-//    cout << endl << endl;
-//    table.keyGen();
     return flux;
 }
