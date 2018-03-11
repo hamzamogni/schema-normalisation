@@ -7,6 +7,7 @@
 #include <algorithm>
 #include "FuncDepen.h"
 #include <set>
+
 class Table {
 
 public:
@@ -18,6 +19,11 @@ public:
     std::string notInRight() const;
     std::string closure(std::string const&) const;
     std::set<std::string> keyGen() const;
+
+    int search(std::string, std::string);
+    int checkNF(std::string);
+    bool check2NF(std::string key);
+    bool check3NF(std::string key);
 private:
     std::string _attributes;
     int         _nbrAttributes;
