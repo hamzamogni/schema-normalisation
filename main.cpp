@@ -7,19 +7,13 @@ using namespace std;
 int main() {
     Table a;
 
-    set<string> foundKeys = a.keyGen();
+    string key = *a.keyGen().begin();
 
-//    set<string>:: iterator it;
-//    string key = *foundKeys.begin();
+    cout << key;
 
-
-//    for( it = foundKeys.begin(); it!=foundKeys.end(); ++it){
-//        cout << *it << endl;
-//    }
-
-    if (a.checkNF("AB") == 3)
+    if (a.checkNF(key) == 3)
         cout << "\n\n3NF\n\n";
-    else if (a.checkNF("AB") == 2)
+    else if (a.checkNF(key) == 2)
         cout << "\n\n2NF\n\n";
     else
         cout << "\n\n1NF\n\n";

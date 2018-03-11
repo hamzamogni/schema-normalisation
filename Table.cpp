@@ -79,7 +79,7 @@ string Table::closure(string const &src) const
     vector<FuncDepen> arr = getFD();
     int count = 0;
 
-    while (++count < _nbrFunctDepen)
+    while (++count <= _nbrFunctDepen)
         for (int i = 0; i < _nbrFunctDepen; ++i)
         {
             string left = arr[i].getLeft();
