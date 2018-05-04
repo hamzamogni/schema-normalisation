@@ -1,0 +1,38 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/hamza/Workspaces/C++/databases/FuncDepen.cpp
+headers/FuncDepen.h
+/home/hamza/Workspaces/C++/databases/headers/FuncDepen.h
+
+/home/hamza/Workspaces/C++/databases/Table.cpp
+headers/Table.h
+/home/hamza/Workspaces/C++/databases/headers/Table.h
+
+/home/hamza/Workspaces/C++/databases/headers/FuncDepen.h
+string
+-
+
+/home/hamza/Workspaces/C++/databases/headers/Table.h
+iostream
+-
+string
+-
+vector
+-
+algorithm
+-
+FuncDepen.h
+/home/hamza/Workspaces/C++/databases/headers/FuncDepen.h
+set
+-
+
+/home/hamza/Workspaces/C++/databases/main.cpp
+headers/Table.h
+/home/hamza/Workspaces/C++/databases/headers/Table.h
+

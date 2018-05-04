@@ -1,22 +1,36 @@
-#include <iostream>
+#include "headers/Table.h"
 
-#include "Table.h"
 
 using namespace std;
 
 int main() {
     Table a;
 
-    string key = *a.keyGen().begin();
+    set<string> keys = a.keyGen();
+    set<string>::iterator it;
 
-    cout << key;
+    for (it = keys.begin();  it != keys.end() ; it++) {
+        cout << *it << endl;
+    }
 
-    if (a.checkNF(key) == 3)
-        cout << "\n\n3NF\n\n";
-    else if (a.checkNF(key) == 2)
-        cout << "\n\n2NF\n\n";
-    else
-        cout << "\n\n1NF\n\n";
+//    vector<Table> b;
+//    if (a.checkNF(key) == 3)
+//        cout << "\n3NF\n";
+//    else if (a.checkNF(key) == 2)
+//    {
+//        cout << "\n2NF\n";
+//        b = a.deco3fn(key);
+//        for (const auto &j : b)
+//            cout << j;
+//    }
+//    else
+//    {
+//        cout << "\n1NF\n";
+//        b = a.deco2fn(key);
+//        for (const auto &j : b)
+//            cout << j;
+//    }
+//
 
     return 0;
 }
