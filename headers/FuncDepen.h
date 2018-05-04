@@ -8,8 +8,8 @@ class FuncDepen {
 public:
     FuncDepen(std::string& left, std::string& right);
 
-    std::string getLeft();
-    std::string getRight();
+    std::string getLeft() const;
+    std::string getRight() const;
 
 private:
     std::string _left;

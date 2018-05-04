@@ -19,10 +19,20 @@ public:
     Table(std::string attr, std::string key);
 
     // Getters
-    std::string getAttr() const;
-    std::string getKey() const;
-    int         getNbrFD() const;
-    std::vector<FuncDepen>   getFD() const;
+    std::string
+        getAttr() const;
+
+    std::set<std::string>
+        getKeys() const;
+
+    int
+        getNbrFD() const;
+
+    std::vector<FuncDepen>
+        getFD() const;
+
+    void
+        setNbrAttr(int);
 
     std::string notInLeft
             ()   const;
@@ -39,13 +49,18 @@ public:
             (std::string key);             //to check if the relation is in the 2nd Normal Form
     bool check3NF
             (std::string key);             //to check if the relation is in the 3rd Normal Form
+    bool checkBC
+            ();
 
     std::vector<Table> deco2fn(std::string key);
     std::vector<Table> deco3fn(std::string key);
 
+    friend std::ostream& operator<<(std::ostream& flux, Table const& table);
+    friend std::istream& operator>>(std::istream& flux, Table & table);
+
 private:
     std::string _attributes;
-    std::string _key;
+    std::set<std::string> _key;
     int         _nbrAttributes;
     int         _nbrFunctDepen;
 
@@ -61,11 +76,8 @@ private:
             (std::string const&) const;
     int  search
             (std::string a, std::string b);//How many chars in b does exist in a
-
 };
 
-
-std::ostream& operator<<( std::ostream& flux, Table const& table );
 bool operator==( Table const& a, Table const& b );
 bool notContains(std::vector<Table> to, Table a);
 

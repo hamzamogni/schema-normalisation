@@ -8,12 +8,12 @@ FuncDepen::FuncDepen(string& left, string& right)
     _right = right;
 }
 
-string FuncDepen::getLeft()
+string FuncDepen::getLeft() const
 {
     return _left;
 }
 
-string FuncDepen::getRight()
+string FuncDepen::getRight() const
 {
     return _right;
 }

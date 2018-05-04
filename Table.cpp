@@ -5,45 +5,16 @@ using namespace std;
 
 Table::Table()
 {
-    cout << "\nHow many attributes do you have ? ";
-    cin >> _nbrAttributes;
-
-    for (int i = 0, chr = 65; i < _nbrAttributes; ++i, chr++)
-        _attributes.append(1, chr);
-
-    cout << *this;
-
-    cout << "How many functional Dependencies ? ";
-    cin >> _nbrFunctDepen;
-
-    string left, right;
-    for (int i = 0; i < _nbrFunctDepen; ++i)
-    {
-        cout << "The FD N° " << i + 1;
-        cout << "\n\t-Left part : ";
-        cin >> left;
-        for (char &j : left)
-            j = char(toupper(j));
-
-        cout << "\t-Right part : ";
-        cin >> right;
-        for (char &j : right)
-            j = char(toupper(j));
-
-        _fds.emplace_back(FuncDepen(left, right));
-    }
-
-
-
-    _key = *keyGen().begin();
-
+    _nbrFunctDepen = 0;
+    _nbrAttributes = 0;
+    _attributes = "";
 }
 
 Table::Table
         (std::string attr, std::string key)
 {
     _attributes = attr;
-    _key        = key;
+    _key        = keyGen();
 }
 
 string Table::getAttr
@@ -64,7 +35,7 @@ int Table::getNbrFD
     return _nbrFunctDepen;
 }
 
-std::string Table::getKey
+std::set<string> Table::getKeys
         () const
 {
     return _key;
@@ -307,7 +278,8 @@ vector<Table> Table::deco3fn
     return ret;
 }
 
-bool notContains(vector<Table> to, Table a)
+bool notContains
+        (vector<Table> to, Table a)
 {
     for (int i = 0; i < to.size(); ++i)
     {
@@ -320,27 +292,66 @@ bool notContains(vector<Table> to, Table a)
 ostream &operator<<
         (ostream &flux, Table const &table)
 {
-    /*
-     * Overloading the output stream for Table class
-     */
     vector<FuncDepen> arr(table.getFD());
 
-    cout << "\n\tR(";
+    flux << "\n\tR(";
     for (int j = 0; j < table.getAttr().length(); ++j)
     {
         if (j == table.getAttr().length() - 1)
         {
-            cout << table.getAttr()[j] << ")";
+            flux << table.getAttr()[j] << ")";
             break;
         }
-        cout << table.getAttr()[j] << ", ";
+        flux << table.getAttr()[j] << ", ";
     }
-
     cout << endl;
-    if (!table.getKey().empty())
-        cout << "The Key : " << table.getKey() << endl;
+    for (int i = 0; i < table._fds.size(); ++i)
+        flux << table._fds[i].getLeft() << " --> " << table._fds[i].getRight() << endl;
 
     return flux;
+}
+
+istream &operator>>
+        (istream &flux, Table &table)
+{
+    int nbrAttr, nbrFDs;
+    cout << "\nHow many attributes do you have ? ";
+    flux >> nbrAttr;
+    table._nbrAttributes = nbrAttr;
+
+    for (int i = 0, chr = 65; i < table._nbrAttributes; ++i, chr++)
+        table._attributes.append(1, chr);
+
+//    cout << *this;
+
+    cout << "How many functional Dependencies ? ";
+    flux >> nbrFDs;
+    table._nbrFunctDepen = nbrFDs;
+
+    string left, right;
+    for (int i = 0; i < table._nbrFunctDepen; ++i)
+    {
+        cout << "The FD N° " << i + 1;
+        cout << "\n\t-Left part : ";
+        flux >> left;
+        for (char &j : left)
+            j = char(toupper(j));
+
+        cout << "\t-Right part : ";
+        flux >> right;
+        for (char &j : right)
+            j = char(toupper(j));
+
+        table._fds.emplace_back(FuncDepen(left, right));
+    }
+    table._key = table.keyGen();
+
+    return flux;
+}
+
+void Table::setNbrAttr(int a)
+{
+    _nbrAttributes = a;
 }
 
 bool operator==(Table const &a, Table const &b)

@@ -5,13 +5,14 @@ using namespace std;
 
 int main() {
     Table a;
-
-    set<string> keys = a.keyGen();
-    set<string>::iterator it;
-
-    for (it = keys.begin();  it != keys.end() ; it++) {
-        cout << *it << endl;
-    }
+    cin >> a;
+    cout << a;
+//    set<string> keys = a.getKeys();
+//    set<string>::iterator it;
+//
+//    for (it = keys.begin();  it != keys.end() ; it++) {
+//        cout << *it << endl;
+//    }
 
 //    vector<Table> b;
 //    if (a.checkNF(key) == 3)
