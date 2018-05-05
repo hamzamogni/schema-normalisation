@@ -7,6 +7,11 @@ int main() {
     Table a;
     cin >> a;
     cout << a;
+
+    vector<string> keys = a.keyGen();
+    for (int i = 0; i < keys.size(); ++i)
+        cout << keys[i] << endl;
+
 //    set<string> keys = a.getKeys();
 //    set<string>::iterator it;
 //

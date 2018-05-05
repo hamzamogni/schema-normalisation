@@ -35,7 +35,7 @@ int Table::getNbrFD
     return _nbrFunctDepen;
 }
 
-std::set<string> Table::getKeys
+std::vector<string> Table::getKeys
         () const
 {
     return _key;
@@ -113,44 +113,47 @@ string Table::closure
 }
 
 
-set<string> Table::keyGen
+vector<string> Table::keyGen
         () const
 {
     /*
      * function to generate the set of all the possible minimal keys
      */
-    set<string> foundKeys;                // the returned set
+    set<string> foundKeys;
+    vector<string> returned;
     vector<FuncDepen> arr = getFD();      // all the functional dependencies
     string  initKey = notInRight(), tmp;  // the initial key (attributes that doesn't exist in all right parts
 
+    // if the initial key closure contains all the attributes, we add it as a minimal key
     if (closure(initKey) == _attributes)
+        returned.push_back(initKey);
+
+    /*
+     * we loop over all the functional dependencies,
+     * we check the closure of the string containing the initial key and the left part of the dependency
+     * if the closure contains all the attributes then we insert that key to the set of the keys
+     */
+    string clos, temp("fffffffffffffffffff");
+    for (int i = 0; i < _nbrFunctDepen; ++i)
     {
-        // if the initial key closure contains all the attributes then we're done, it's the minimal key
-        foundKeys.insert(initKey);
-        return foundKeys;
-    } else
-    {
-        /*
-         * else we loop over all the functional dependencies,
-         * we check the closure of the string containing the initial key and the left part of the dependency
-         * if the closure contains all the attributes then we insert that key to the set of the keys
-         */
-        string clos, temp("fffffffffffffffffff");
-        for (int i = 0; i < _nbrFunctDepen; ++i)
+        string str = initKey + arr[i].getLeft();
+        tmp = format(str);
+        clos = closure(tmp);
+        if ( clos == _attributes)
         {
-            string str = initKey + arr[i].getLeft();
-            tmp = format(str);
-            clos = closure(tmp);
-            if ( clos == _attributes)
-            {
-                if (tmp.length() > temp.length())
-                    return foundKeys;
-                foundKeys.insert(format(tmp));
-                temp = format(tmp);
-            }
+            if (tmp.length() > temp.length())
+                break;
+            foundKeys.insert(format(tmp));
+            temp = format(tmp);
         }
-        return foundKeys;
     }
+
+    set<string>::iterator it;
+
+    for (it = foundKeys.begin(); it != foundKeys.end() ; ++it)
+        returned.push_back(*it);
+
+    return returned;
 }
 
 std::string Table::format
@@ -193,6 +196,15 @@ bool Table::check2NF
                 return false;
     }
     return true;
+}
+
+bool Table::checkBCNF()
+{
+
+    for (int i = 0; i < _fds.size(); ++i)
+    {
+
+    }
 }
 
 int Table::checkNF

@@ -22,7 +22,7 @@ public:
     std::string
         getAttr() const;
 
-    std::set<std::string>
+    std::vector<std::string>
         getKeys() const;
 
     int
@@ -41,7 +41,7 @@ public:
             () const;
 
     // function to generate the set of minimal keys
-    std::set<std::string>    keyGen() const;
+    std::vector<std::string>    keyGen() const;
 
     int  checkNF
             (std::string);                 //Returns in wich normal form is the relation
@@ -49,7 +49,7 @@ public:
             (std::string key);             //to check if the relation is in the 2nd Normal Form
     bool check3NF
             (std::string key);             //to check if the relation is in the 3rd Normal Form
-    bool checkBC
+    bool checkBCNF
             ();
 
     std::vector<Table> deco2fn(std::string key);
@@ -60,7 +60,7 @@ public:
 
 private:
     std::string _attributes;
-    std::set<std::string> _key;
+    std::vector<std::string> _key;
     int         _nbrAttributes;
     int         _nbrFunctDepen;
 
