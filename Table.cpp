@@ -11,12 +11,12 @@ Table::Table()
 }
 
 Table::Table
-        (std::string attr, std::string key)
+        (std::string attr)
 {
     _attributes = attr;
     _nbrAttributes = _attributes.size();
     _nbrFunctDepen = 0;
-    _keyComposed        = key;
+    _key        = keyGen();
 }
 
 string Table::getAttr
@@ -121,6 +121,9 @@ vector<string> Table::keyGen
     /*
      * function to generate the set of all the possible minimal keys
      */
+
+
+
     set<string> foundKeys;
     vector<string> returned;
     vector<FuncDepen> arr = getFD();      // all the functional dependencies
@@ -254,56 +257,56 @@ int Table::search
     return ret;
 }
 
-vector<Table> Table::deco2fn
-        (std::string key)
-{
-    vector<FuncDepen> fds = getFD();
-    vector<Table> ret;
-    for (auto &fd : fds)
-    {
-        if( (search(fd.getLeft(), key) > 0) && (search(fd.getLeft(), key) < key.length()) )
-        {
-            if( search(fd.getLeft(), key) == fd.getLeft().length() && notContains(ret, Table(closure(fd.getLeft()), fd.getLeft())))
-            {
-                string tmp = closure(fd.getLeft());
-                ret.emplace_back(Table(format(tmp), fd.getLeft()));
-            }
-
-        } else if(fd.getLeft().length() == key.length() && notContains(ret, Table(fd.getLeft()+fd.getRight(), fd.getLeft()))) {
-            string tmp = fd.getLeft()+fd.getRight();
-            ret.emplace_back(Table(format(tmp), fd.getLeft()));
-
-        } else if (search(notInLeft(), notInRight()) > 0  &&  notContains(ret, Table(key, key)))
-            ret.emplace_back(Table(key, key));
-
-    }
-
-    return ret;
-}
-
-vector<Table> Table::deco3fn
-        (string key)
-{
-    vector<Table> ret;
-    vector<FuncDepen> fds = getFD();
-    for (int i = 0; i < fds.size(); ++i)
-    {
-        for (int j = 0; j < fds.size(); ++j)
-            if (fds[i].getLeft() == fds[j].getRight() && notContains(ret, Table(fds[i].getLeft()+fds[i].getRight(), fds[i].getLeft())))
-            {
-                string tmp = fds[i].getLeft()+fds[i].getRight();
-                ret.emplace_back(Table(format(tmp), fds[i].getLeft()));
-            }
-
-        if (fds[i].getLeft().length() == key.length() && notContains(ret, Table(fds[i].getLeft()+fds[i].getRight(), fds[i].getLeft())))
-        {
-            string tmp = fds[i].getLeft()+fds[i].getRight();
-            ret.emplace_back(Table(format(tmp), fds[i].getLeft()));
-        }
-    }
-
-    return ret;
-}
+//vector<Table> Table::deco2fn
+//        (std::string key)
+//{
+//    vector<FuncDepen> fds = getFD();
+//    vector<Table> ret;
+//    for (auto &fd : fds)
+//    {
+//        if( (search(fd.getLeft(), key) > 0) && (search(fd.getLeft(), key) < key.length()) )
+//        {
+//            if( search(fd.getLeft(), key) == fd.getLeft().length() && notContains(ret, Table(closure(fd.getLeft()), fd.getLeft())))
+//            {
+//                string tmp = closure(fd.getLeft());
+//                ret.emplace_back(Table(format(tmp), fd.getLeft()));
+//            }
+//
+//        } else if(fd.getLeft().length() == key.length() && notContains(ret, Table(fd.getLeft()+fd.getRight(), fd.getLeft()))) {
+//            string tmp = fd.getLeft()+fd.getRight();
+//            ret.emplace_back(Table(format(tmp), fd.getLeft()));
+//
+//        } else if (search(notInLeft(), notInRight()) > 0  &&  notContains(ret, Table(key, key)))
+//            ret.emplace_back(Table(key, key));
+//
+//    }
+//
+//    return ret;
+//}
+//
+//vector<Table> Table::deco3fn
+//        (string key)
+//{
+//    vector<Table> ret;
+//    vector<FuncDepen> fds = getFD();
+//    for (int i = 0; i < fds.size(); ++i)
+//    {
+//        for (int j = 0; j < fds.size(); ++j)
+//            if (fds[i].getLeft() == fds[j].getRight() && notContains(ret, Table(fds[i].getLeft()+fds[i].getRight(), fds[i].getLeft())))
+//            {
+//                string tmp = fds[i].getLeft()+fds[i].getRight();
+//                ret.emplace_back(Table(format(tmp), fds[i].getLeft()));
+//            }
+//
+//        if (fds[i].getLeft().length() == key.length() && notContains(ret, Table(fds[i].getLeft()+fds[i].getRight(), fds[i].getLeft())))
+//        {
+//            string tmp = fds[i].getLeft()+fds[i].getRight();
+//            ret.emplace_back(Table(format(tmp), fds[i].getLeft()));
+//        }
+//    }
+//
+//    return ret;
+//}
 
 bool notContains
         (vector<Table> to, Table a)
@@ -370,6 +373,7 @@ istream &operator>>
 
         table._fds.emplace_back(FuncDepen(left, right));
     }
+
     table._key = table.keyGen();
 
     return flux;
@@ -378,6 +382,11 @@ istream &operator>>
 void Table::setNbrAttr(int a)
 {
     _nbrAttributes = a;
+}
+
+void Table::setKeys()
+{
+    _key = keyGen();
 }
 
 void Table::setFD(FuncDepen const& in)

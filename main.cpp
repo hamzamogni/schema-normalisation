@@ -14,26 +14,26 @@ void decoBCNF(Table a)
         FuncDepen df = a.getFD()[0];
         string leftPart(df.getLeft());
 
+        Table one(a.closure(leftPart));
+        Table two(leftPart+substitute(a.getAttr(), a.closure(leftPart)));
 
-        Table one(a.closure(leftPart), leftPart);
-        Table two(leftPart+substitute(a.getAttr(), a.closure(leftPart)), leftPart);
-
-        for (int i = 1; i < a.getFD().size(); ++i)
+        for (int i = 0; i < a.getFD().size(); ++i)
             if (classifyFD(one.getAttr(), a.getFD()[i]))
             {
                 FuncDepen processed = a.getFD()[i];
                 one.setFD(processed);
-                a.delFD(processed);
             }
-
-
-        for (int j = 1; j < a.getFD().size(); ++j)
+        for (int j = 0; j < a.getFD().size(); ++j)
+        {
             if (classifyFD(two.getAttr(), a.getFD()[j]))
             {
                 FuncDepen processed = a.getFD()[j];
                 two.setFD(processed);
-                a.delFD(processed);
             }
+        }
+
+        one.setKeys();
+        two.setKeys();
 
         decoBCNF(one);
         decoBCNF(two);

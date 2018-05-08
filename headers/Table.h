@@ -16,7 +16,7 @@ class Table {
 public:
     //constructors
     Table();
-    Table(std::string attr, std::string key);
+    Table(std::string attr);
 
     // Getters
     std::string
@@ -38,6 +38,8 @@ public:
     void
         setNbrAttr(int);
 
+    void setKeys();
+
     std::string notInLeft
             ()   const;
 
@@ -58,7 +60,6 @@ public:
 
     std::vector<Table> deco2fn(std::string key);
     std::vector<Table> deco3fn(std::string key);
-    void decoBCNF();
 
     std::string closure
             (std::string const&) const;
@@ -71,16 +72,12 @@ private:
     std::vector<std::string> _key;
     int         _nbrAttributes;
     int         _nbrFunctDepen;
-    std::string _keyComposed;
-
     std::vector<FuncDepen> _fds;
 
     std::string concatenateRight
             ()   const;
     std::string notInRight
             ()   const;
-
-
     int  search
             (std::string a, std::string b);//How many chars in b does exist in a
 };
