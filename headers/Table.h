@@ -31,6 +31,10 @@ public:
     std::vector<FuncDepen>
         getFD() const;
 
+    void setFD( FuncDepen const&);
+
+    void delFD(FuncDepen const&);
+
     void
         setNbrAttr(int);
 
@@ -49,11 +53,15 @@ public:
             (std::string key);             //to check if the relation is in the 2nd Normal Form
     bool check3NF
             (std::string key);             //to check if the relation is in the 3rd Normal Form
-    bool checkBCNF
+    bool isBCNF
             ();
 
     std::vector<Table> deco2fn(std::string key);
     std::vector<Table> deco3fn(std::string key);
+    void decoBCNF();
+
+    std::string closure
+            (std::string const&) const;
 
     friend std::ostream& operator<<(std::ostream& flux, Table const& table);
     friend std::istream& operator>>(std::istream& flux, Table & table);
@@ -63,6 +71,7 @@ private:
     std::vector<std::string> _key;
     int         _nbrAttributes;
     int         _nbrFunctDepen;
+    std::string _keyComposed;
 
     std::vector<FuncDepen> _fds;
 
@@ -70,15 +79,16 @@ private:
             ()   const;
     std::string notInRight
             ()   const;
-    std::string format
-            (std::string&) const;
-    std::string closure
-            (std::string const&) const;
+
+
     int  search
             (std::string a, std::string b);//How many chars in b does exist in a
 };
 
 bool operator==( Table const& a, Table const& b );
 bool notContains(std::vector<Table> to, Table a);
+std::string substitute(std::string, std::string);
+std::string format (std::string&);
+bool classifyFD(std::string const&, FuncDepen&);
 
 #endif //DATABASES_TABLE_H

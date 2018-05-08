@@ -14,7 +14,9 @@ Table::Table
         (std::string attr, std::string key)
 {
     _attributes = attr;
-    _key        = keyGen();
+    _nbrAttributes = _attributes.size();
+    _nbrFunctDepen = 0;
+    _keyComposed        = key;
 }
 
 string Table::getAttr
@@ -125,39 +127,38 @@ vector<string> Table::keyGen
     string  initKey = notInRight(), tmp;  // the initial key (attributes that doesn't exist in all right parts
 
     // if the initial key closure contains all the attributes, we add it as a minimal key
-    if (closure(initKey) == _attributes)
-        returned.push_back(initKey);
+//    if (closure(initKey) == _attributes)
+//        returned.push_back(initKey);
 
     /*
      * we loop over all the functional dependencies,
      * we check the closure of the string containing the initial key and the left part of the dependency
      * if the closure contains all the attributes then we insert that key to the set of the keys
      */
-    string clos, temp("fffffffffffffffffff");
+    string clos, temp("ffffffff");
     for (int i = 0; i < _nbrFunctDepen; ++i)
     {
         string str = initKey + arr[i].getLeft();
         tmp = format(str);
         clos = closure(tmp);
         if ( clos == _attributes)
-        {
-            if (tmp.length() > temp.length())
-                break;
-            foundKeys.insert(format(tmp));
-            temp = format(tmp);
-        }
+            if (tmp.length() <= temp.length())
+            {
+                foundKeys.insert(format(tmp));
+                temp = format(tmp);
+
+            } else break;
+
     }
 
-    set<string>::iterator it;
-
-    for (it = foundKeys.begin(); it != foundKeys.end() ; ++it)
+    for (set<string>::iterator it = foundKeys.begin(); it != foundKeys.end() ; ++it)
         returned.push_back(*it);
 
     return returned;
 }
 
-std::string Table::format
-        (std::string &src) const
+std::string format
+        (std::string &src)
 {
     /*
      * This function format a string by sorting it alphabetically
@@ -198,13 +199,27 @@ bool Table::check2NF
     return true;
 }
 
-bool Table::checkBCNF()
+bool Table::isBCNF()
 {
-
+    vector<FuncDepen> toRemove;
     for (int i = 0; i < _fds.size(); ++i)
-    {
+        for (int j = 0; j < _key.size(); ++j)
+            if (_fds[i].getLeft().find(_key[j]) != string::npos)
+                toRemove.push_back(_fds[i]);
 
-    }
+    for (int k = 0; k < toRemove.size(); ++k)
+        for (int l = 0; l < _fds.size(); ++l)
+        {
+            if (toRemove[k].getLeft() == _fds[l].getLeft() && toRemove[k].getRight() == _fds[l].getRight())
+            {
+                _fds.erase(_fds.begin() + l);
+                _nbrFunctDepen--;
+            }
+
+        }
+
+    return (_fds.size() == 0 ? true : false);
+
 }
 
 int Table::checkNF
@@ -334,8 +349,7 @@ istream &operator>>
     for (int i = 0, chr = 65; i < table._nbrAttributes; ++i, chr++)
         table._attributes.append(1, chr);
 
-//    cout << *this;
-
+    cout << "R(" <<  table._attributes << ")" << endl;
     cout << "How many functional Dependencies ? ";
     flux >> nbrFDs;
     table._nbrFunctDepen = nbrFDs;
@@ -366,7 +380,51 @@ void Table::setNbrAttr(int a)
     _nbrAttributes = a;
 }
 
+void Table::setFD(FuncDepen const& in)
+{
+    _fds.push_back(in);
+    _nbrFunctDepen++;
+}
+
+void Table::delFD(FuncDepen const & in)
+{
+    for (int i = 0; i < _fds.size(); ++i)
+        if (in.getLeft() == _fds[i].getLeft() && in.getRight() == _fds[i].getRight())
+        {
+            _fds.erase(_fds.begin() + i);
+            _nbrFunctDepen--;
+        }
+}
+
+
 bool operator==(Table const &a, Table const &b)
 {
     return (a.getAttr() == b.getAttr());
+}
+
+
+string substitute(std::string attr, std::string clos)
+{
+    unsigned long j;
+
+    for (int i = 0; i < clos.size(); ++i)
+    {
+        j = attr.find_first_of(clos[i]);
+        if (j != string::npos)
+            attr.erase(attr.begin() + j);
+    }
+
+    return format(attr);
+
+}
+
+bool classifyFD(string const& attr, FuncDepen& toCheck)
+{
+    string concatenated = toCheck.getLeft() + toCheck.getRight();
+
+    for (int i = 0; i < concatenated.size(); ++i)
+        if (attr.find_first_of(concatenated[i]) == string::npos)
+            return false;
+
+    return true;
 }
